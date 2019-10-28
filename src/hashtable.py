@@ -90,7 +90,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is not None:
+            current_pairing = self.storage[val_index]
+            while current_pairing is not None:
+                if current_pairing.key == key:
+                    return current_pairing.value
+                current_pairing = current_pairing.next
+            return None
+        else:
+            return None
 
     def resize(self):
         '''
@@ -134,6 +143,9 @@ if __name__ == "__main__":
     wasiu = HashTable(10)
     print('wasiu:', wasiu.storage)
     wasiu.insert(0, 10)
+    wasiu.insert(9, 'magnate')
+    wasiu.insert(4, 'stranger in Moscow')
+    print('retrieving value:', wasiu.retrieve(0))
     print('wasiu:', wasiu.storage)
     """ print('hash:', wasiu._hash(10))
     print('hash:', wasiu._hash(20))
