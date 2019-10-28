@@ -23,8 +23,8 @@ class HashTable:
         Hash an arbitrary key and return an integer.
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        # return hash(key)
-        return key % len(self.storage)
+        return hash(key)
+        # return key % len(self.storage)
 
 
     def _hash_djb2(self, key):
@@ -52,7 +52,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is not None:
+            new_key_val_pair = LinkedPair(key, value)
+            current_pairing = self.storage[val_index]
+            if current_pairing.key == key:
+                current_pairing.value = value
+                return
+            while current_pairing.next is not None:
+                current_pairing = current_pairing.next
+                if current_pairing.key == key:
+                    current_pairing.value = value
+                    return
+            current_pairing.next = new_key_val_pair
+        else:
+            self.storage[val_index] = LinkedPair(key, value)
+
 
 
 
@@ -76,7 +91,6 @@ class HashTable:
         Fill this in.
         '''
         pass
-
 
     def resize(self):
         '''
@@ -119,6 +133,9 @@ if __name__ == "__main__":
 
     wasiu = HashTable(10)
     print('wasiu:', wasiu.storage)
-    print('hash:', wasiu._hash(10))
+    wasiu.insert(0, 10)
+    print('wasiu:', wasiu.storage)
+    """ print('hash:', wasiu._hash(10))
     print('hash:', wasiu._hash(20))
     print('hash:', wasiu._hash(25))
+ """
