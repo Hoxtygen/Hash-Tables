@@ -79,7 +79,23 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is None:
+            print('The key you are trying to delete does not exist!')
+            return
+
+        if self.storage[val_index] is not None:
+            current_pairing = self.storage[val_index]
+            if current_pairing.key == key or current_pairing.next is None:
+                self.storage[val_index] = current_pairing.next
+            else:
+                while current_pairing is not None:
+                    next_pairing = current_pairing.next
+                    if next_pairing.key == key:
+                        current_pairing.next = next_pairing.next
+                    current_pairing = current_pairing.next
+        else:
+            print('The key you are trying to delete does not exist!')
 
 
     def retrieve(self, key):
@@ -146,8 +162,5 @@ if __name__ == "__main__":
     wasiu.insert(9, 'magnate')
     wasiu.insert(4, 'stranger in Moscow')
     print('retrieving value:', wasiu.retrieve(0))
+    print('deleting key:', wasiu.remove(100))
     print('wasiu:', wasiu.storage)
-    """ print('hash:', wasiu._hash(10))
-    print('hash:', wasiu._hash(20))
-    print('hash:', wasiu._hash(25))
- """
