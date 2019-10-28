@@ -17,13 +17,14 @@ class HashTable:
         self.storage = [None] * capacity
 
 
+
     def _hash(self, key):
         '''
         Hash an arbitrary key and return an integer.
-
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+        # return hash(key)
+        return key % len(self.storage)
 
 
     def _hash_djb2(self, key):
@@ -115,3 +116,9 @@ if __name__ == "__main__":
     print(ht.retrieve("line_3"))
 
     print("")
+
+    wasiu = HashTable(10)
+    print('wasiu:', wasiu.storage)
+    print('hash:', wasiu._hash(10))
+    print('hash:', wasiu._hash(20))
+    print('hash:', wasiu._hash(25))
