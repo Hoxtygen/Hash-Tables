@@ -17,13 +17,14 @@ class HashTable:
         self.storage = [None] * capacity
 
 
+
     def _hash(self, key):
         '''
         Hash an arbitrary key and return an integer.
-
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
         return hash(key)
+        # return key % len(self.storage)
 
 
     def _hash_djb2(self, key):
@@ -51,7 +52,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is not None:
+            new_key_val_pair = LinkedPair(key, value)
+            current_pairing = self.storage[val_index]
+            if current_pairing.key == key:
+                current_pairing.value = value
+                return
+            while current_pairing.next is not None:
+                current_pairing = current_pairing.next
+                if current_pairing.key == key:
+                    current_pairing.value = value
+                    return
+            current_pairing.next = new_key_val_pair
+        else:
+            self.storage[val_index] = LinkedPair(key, value)
+
 
 
 
@@ -63,7 +79,23 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is None:
+            print('The key you are trying to delete does not exist!')
+            return
+
+        if self.storage[val_index] is not None:
+            current_pairing = self.storage[val_index]
+            if current_pairing.key == key or current_pairing.next is None:
+                self.storage[val_index] = current_pairing.next
+            else:
+                while current_pairing is not None:
+                    next_pairing = current_pairing.next
+                    if next_pairing.key == key:
+                        current_pairing.next = next_pairing.next
+                    current_pairing = current_pairing.next
+        else:
+            print('The key you are trying to delete does not exist!')
 
 
     def retrieve(self, key):
@@ -74,8 +106,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
+        val_index = self._hash_mod(key)
+        if self.storage[val_index] is not None:
+            current_pairing = self.storage[val_index]
+            while current_pairing is not None:
+                if current_pairing.key == key:
+                    return current_pairing.value
+                current_pairing = current_pairing.next
+            return None
+        else:
+            return None
 
     def resize(self):
         '''
@@ -84,7 +124,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        prev_storage = self.storage
+        self.storage = [None] * self.capacity
+
+        for bindings in prev_storage:
+            if bindings is not None:
+                current_pairing = bindings
+                while current_pairing is not None:
+                    self.insert(current_pairing.key, current_pairing.value)
+                    current_pairing = current_pairing.next
 
 
 
@@ -115,3 +164,12 @@ if __name__ == "__main__":
     print(ht.retrieve("line_3"))
 
     print("")
+
+    wasiu = HashTable(10)
+    print('wasiu:', wasiu.storage)
+    wasiu.insert(0, 10)
+    wasiu.insert(9, 'magnate')
+    wasiu.insert(4, 'stranger in Moscow')
+    print('retrieving value:', wasiu.retrieve(0))
+    print('deleting key:', wasiu.remove(100))
+    print('wasiu:', wasiu.storage)
