@@ -124,7 +124,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        prev_storage = self.storage
+        self.storage = [None] * self.capacity
+
+        for bindings in prev_storage:
+            if bindings is not None:
+                current_pairing = bindings
+                while current_pairing is not None:
+                    self.insert(current_pairing.key, current_pairing.value)
+                    current_pairing = current_pairing.next
 
 
 
